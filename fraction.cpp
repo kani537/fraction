@@ -1,18 +1,18 @@
 #include "fraction.hpp"
 
-fraction::fraction(int modelcure, int denominator) {
+frac::frac(int modelcure, int denominator) {
   mode = modelcure;
   deno = denominator;
   contract();
 }
 
-fraction::fraction(std::pair<int, int> _pair) {
+frac::frac(std::pair<int, int> _pair) {
   mode = _pair.first;
   deno = _pair.second;
   contract();
 }
 
-fraction::fraction(const std::string &str) {
+frac::frac(const std::string &str) {
   mode = 0;
   deno = 1;
   for (auto c : str)
@@ -27,112 +27,131 @@ fraction::fraction(const std::string &str) {
   contract();
 }
 
-int fraction::get_mode(void) { return mode; }
+int frac::get_mode(void) { return mode; }
 
-int fraction::get_deno(void) { return deno; }
+int frac::get_deno(void) { return deno; }
 
-double fraction::calc(void) const { return (double)mode / deno; }
+double frac::calc(void) const { return (double)mode / deno; }
 
-fraction fraction::operator+(int num) const {
-  fraction ret(*this);
+std::string frac::calc_str(size_t digit) const {
+  std::string ret = "";
+  auto tmp = mode;
+  bool flag = true;
+  while (ret.size() < digit + 1) {
+    ret += std::to_string(tmp / deno);
+    tmp %= deno;
+    tmp *= 10;
+    if (flag) {
+      ret += ".";
+      flag = false;
+    }
+    if (!tmp)
+      break;
+  }
+
+  return ret;
+}
+
+frac frac::operator+(int num) const {
+  frac ret(*this);
   ret += num;
   return ret;
 }
 
-fraction fraction::operator+(fraction _fraction) const {
-  fraction ret(*this);
-  ret += _fraction;
+frac frac::operator+(frac _frac) const {
+  frac ret(*this);
+  ret += _frac;
   return ret;
 }
 
-fraction fraction::operator-(int num) const {
-  fraction ret(*this);
+frac frac::operator-(int num) const {
+  frac ret(*this);
   ret -= num;
   return ret;
 }
 
-fraction fraction::operator-(fraction _fraction) const {
-  fraction ret(*this);
-  ret -= _fraction;
+frac frac::operator-(frac _frac) const {
+  frac ret(*this);
+  ret -= _frac;
   return ret;
 }
 
-fraction fraction::operator*(int num) const {
-  fraction ret(*this);
+frac frac::operator*(int num) const {
+  frac ret(*this);
   ret *= num;
   return ret;
 }
 
-fraction fraction::operator*(fraction _fraction) const {
-  fraction ret(*this);
-  ret *= _fraction;
+frac frac::operator*(frac _frac) const {
+  frac ret(*this);
+  ret *= _frac;
   return ret;
 }
 
-fraction fraction::operator/(int num) const {
-  fraction ret(*this);
+frac frac::operator/(int num) const {
+  frac ret(*this);
   ret /= num;
   return ret;
 }
 
-fraction fraction::operator/(fraction _fraction) const {
-  fraction ret(*this);
-  ret /= _fraction;
+frac frac::operator/(frac _frac) const {
+  frac ret(*this);
+  ret /= _frac;
   return ret;
 }
 
-void fraction::operator+=(int num) {
+void frac::operator+=(int num) {
   mode += num * deno;
   contract();
 }
 
-void fraction::operator+=(fraction _fraction) {
-  auto lcm = std::lcm(deno, _fraction.deno);
+void frac::operator+=(frac _frac) {
+  auto lcm = std::lcm(deno, _frac.deno);
   mode *= lcm / deno;
-  mode += _fraction.mode * (lcm / _fraction.deno);
+  mode += _frac.mode * (lcm / _frac.deno);
   deno = lcm;
   contract();
 }
 
-void fraction::operator-=(int num) {
+void frac::operator-=(int num) {
   mode -= num * deno;
   contract();
 }
-void fraction::operator-=(fraction _fraction) {
-  auto lcm = std::lcm(deno, _fraction.deno);
+void frac::operator-=(frac _frac) {
+  auto lcm = std::lcm(deno, _frac.deno);
   mode *= lcm / deno;
-  mode -= _fraction.mode * (lcm / _fraction.deno);
+  mode -= _frac.mode * (lcm / _frac.deno);
   deno = lcm;
   contract();
 }
 
-void fraction::operator*=(int num) {
+void frac::operator*=(int num) {
   mode *= num;
   contract();
 }
 
-void fraction::operator*=(fraction _fraction) {
-  mode *= _fraction.mode;
-  deno *= _fraction.deno;
+void frac::operator*=(frac _frac) {
+  mode *= _frac.mode;
+  deno *= _frac.deno;
   contract();
 }
 
-void fraction::operator/=(int num) {
+void frac::operator/=(int num) {
   deno *= num;
   contract();
 }
 
-void fraction::operator/=(fraction _fraction) {
-  mode *= _fraction.deno;
-  deno *= _fraction.mode;
+void frac::operator/=(frac _frac) {
+  mode *= _frac.deno;
+  deno *= _frac.mode;
   contract();
 }
 
-bool fraction::operator==(fraction _fraction) const {
-  return mode == _fraction.mode && deno == _fraction.deno;
+bool frac::operator==(frac _frac) const {
+  return mode == _frac.mode && deno == _frac.deno;
 }
 
-void fraction::contract(void) {
+void frac::contract(void) {
   auto gcd = std::gcd(mode, deno);
   mode /= gcd;
   deno /= gcd;
