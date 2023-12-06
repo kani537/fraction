@@ -4,12 +4,13 @@
 
 class frac {
  public:
-  frac(int modelcure = 0, int denominator = 1);
+  frac(int numerator);
+  frac(int numerator, int denominator);
   frac(std::pair<int, int> _pair);
   frac(const std::string &str);
 
-  int get_mode(void);
-  int get_deno(void);
+  int get_top(void);
+  int get_bottom(void);
   double calc(void) const;
   std::string calc_str(size_t digit = 10) const;
 
@@ -31,7 +32,7 @@ class frac {
   bool operator>=(frac _frac) const;
 
  private:
-  int mode;
-  int deno;
+  int top;
+  int bottom;
   void contract(void);
 };

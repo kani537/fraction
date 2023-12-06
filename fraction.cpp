@@ -1,45 +1,51 @@
 #include "fraction.hpp"
 
-frac::frac(int modelcure, int denominator) {
-  mode = modelcure;
-  deno = denominator;
+frac::frac(int numerator) {
+  top = numerator;
+  bottom = 1;
+  contract();
+}
+
+frac::frac(int numerator, int denominator) {
+  top = numerator;
+  bottom = denominator;
   contract();
 }
 
 frac::frac(std::pair<int, int> _pair) {
-  mode = _pair.first;
-  deno = _pair.second;
+  top = _pair.first;
+  bottom = _pair.second;
   contract();
 }
 
 frac::frac(const std::string &str) {
-  mode = 0;
-  deno = 1;
+  top = 0;
+  bottom = 1;
   for (auto c : str)
     if ('0' <= c && c <= '9') {
-      mode *= 10;
-      mode += c - '0';
+      top *= 10;
+      top += c - '0';
     }
   auto pos = str.find('.');
   if (pos != std::string::npos)
     for (size_t i = 1; i < str.size() - pos; i++)
-      deno *= 10;
+      bottom *= 10;
   contract();
 }
 
-int frac::get_mode(void) { return mode; }
+int frac::get_top(void) { return top; }
 
-int frac::get_deno(void) { return deno; }
+int frac::get_bottom(void) { return bottom; }
 
-double frac::calc(void) const { return (double)mode / deno; }
+double frac::calc(void) const { return (double)top / bottom; }
 
 std::string frac::calc_str(size_t digit) const {
   std::string ret = "";
-  auto tmp = mode;
+  auto tmp = top;
   bool flag = true;
   while (ret.size() < digit + 1) {
-    ret += std::to_string(tmp / deno);
-    tmp %= deno;
+    ret += std::to_string(tmp / bottom);
+    tmp %= bottom;
     tmp *= 10;
     if (flag) {
       ret += ".";
@@ -60,7 +66,7 @@ frac frac::operator+(frac _frac) const {
 
 frac frac::operator-() const {
   frac ret(*this);
-  ret.mode *= -1;
+  ret.top *= -1;
   return ret;
 }
 
@@ -83,35 +89,35 @@ frac frac::operator/(frac _frac) const {
 }
 
 void frac::operator+=(frac _frac) {
-  auto lcm = std::lcm(deno, _frac.deno);
-  mode *= lcm / deno;
-  mode += _frac.mode * (lcm / _frac.deno);
-  deno = lcm;
+  auto lcm = std::lcm(bottom, _frac.bottom);
+  top *= lcm / bottom;
+  top += _frac.top * (lcm / _frac.bottom);
+  bottom = lcm;
   contract();
 }
 
 void frac::operator-=(frac _frac) {
-  auto lcm = std::lcm(deno, _frac.deno);
-  mode *= lcm / deno;
-  mode -= _frac.mode * (lcm / _frac.deno);
-  deno = lcm;
+  auto lcm = std::lcm(bottom, _frac.bottom);
+  top *= lcm / bottom;
+  top -= _frac.top * (lcm / _frac.bottom);
+  bottom = lcm;
   contract();
 }
 
 void frac::operator*=(frac _frac) {
-  mode *= _frac.mode;
-  deno *= _frac.deno;
+  top *= _frac.top;
+  bottom *= _frac.bottom;
   contract();
 }
 
 void frac::operator/=(frac _frac) {
-  mode *= _frac.deno;
-  deno *= _frac.mode;
+  top *= _frac.bottom;
+  bottom *= _frac.top;
   contract();
 }
 
 bool frac::operator==(frac _frac) const {
-  return mode == _frac.mode && deno == _frac.deno;
+  return top == _frac.top && bottom == _frac.bottom;
 }
 
 bool frac::operator!=(frac _frac) const {
@@ -119,23 +125,24 @@ bool frac::operator!=(frac _frac) const {
 }
 
 bool frac::operator<(frac _frac) const {
-  return mode * _frac.deno < _frac.mode * deno;
+  return top * _frac.bottom < _frac.top * bottom;
 }
 
 bool frac::operator<=(frac _frac) const {
-  return mode * _frac.deno <= _frac.mode * deno;
+  return top * _frac.bottom <= _frac.top * bottom;
 }
 
 bool frac::operator>(frac _frac) const {
-  return mode * _frac.deno > _frac.mode * deno;
+  return top * _frac.bottom > _frac.top * bottom;
 }
 
 bool frac::operator>=(frac _frac) const {
-  return mode * _frac.deno >= _frac.mode * deno;
+  return top * _frac.bottom >= _frac.top * bottom;
 }
 
 void frac::contract(void) {
-  auto gcd = std::gcd(mode, deno);
-  mode /= gcd;
-  deno /= gcd;
+  auto gcd = std::gcd(top, bottom);
+  top /= gcd;
+  bottom /= gcd;
+  frac a = 1;
 }
