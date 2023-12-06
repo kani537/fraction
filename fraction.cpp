@@ -1,23 +1,5 @@
 #include "fraction.hpp"
 
-frac::frac(int numerator) {
-  top = numerator;
-  bottom = 1;
-  contract();
-}
-
-frac::frac(int numerator, int denominator) {
-  top = numerator;
-  bottom = denominator;
-  contract();
-}
-
-frac::frac(std::pair<int, int> _pair) {
-  top = _pair.first;
-  bottom = _pair.second;
-  contract();
-}
-
 frac::frac(const std::string &str) {
   top = 0;
   bottom = 1;
@@ -58,10 +40,8 @@ std::string frac::calc_str(size_t digit) const {
   return ret;
 }
 
-frac frac::operator+(frac _frac) const {
-  frac ret(*this);
-  ret += _frac;
-  return ret;
+frac frac::operator+(const frac &_frac) const {
+  return frac(top * _frac.bottom + _frac.top * bottom, bottom * _frac.bottom);
 }
 
 frac frac::operator-() const {
@@ -70,25 +50,25 @@ frac frac::operator-() const {
   return ret;
 }
 
-frac frac::operator-(frac _frac) const {
+frac frac::operator-(const frac &_frac) const {
   frac ret(*this);
   ret -= _frac;
   return ret;
 }
 
-frac frac::operator*(frac _frac) const {
+frac frac::operator*(const frac &_frac) const {
   frac ret(*this);
   ret *= _frac;
   return ret;
 }
 
-frac frac::operator/(frac _frac) const {
+frac frac::operator/(const frac &_frac) const {
   frac ret(*this);
   ret /= _frac;
   return ret;
 }
 
-void frac::operator+=(frac _frac) {
+void frac::operator+=(const frac &_frac) {
   auto lcm = std::lcm(bottom, _frac.bottom);
   top *= lcm / bottom;
   top += _frac.top * (lcm / _frac.bottom);
@@ -96,7 +76,7 @@ void frac::operator+=(frac _frac) {
   contract();
 }
 
-void frac::operator-=(frac _frac) {
+void frac::operator-=(const frac &_frac) {
   auto lcm = std::lcm(bottom, _frac.bottom);
   top *= lcm / bottom;
   top -= _frac.top * (lcm / _frac.bottom);
@@ -104,39 +84,39 @@ void frac::operator-=(frac _frac) {
   contract();
 }
 
-void frac::operator*=(frac _frac) {
+void frac::operator*=(const frac &_frac) {
   top *= _frac.top;
   bottom *= _frac.bottom;
   contract();
 }
 
-void frac::operator/=(frac _frac) {
+void frac::operator/=(const frac &_frac) {
   top *= _frac.bottom;
   bottom *= _frac.top;
   contract();
 }
 
-bool frac::operator==(frac _frac) const {
+bool frac::operator==(const frac &_frac) const {
   return top == _frac.top && bottom == _frac.bottom;
 }
 
-bool frac::operator!=(frac _frac) const {
+bool frac::operator!=(const frac &_frac) const {
   return !(*this == _frac);
 }
 
-bool frac::operator<(frac _frac) const {
+bool frac::operator<(const frac &_frac) const {
   return top * _frac.bottom < _frac.top * bottom;
 }
 
-bool frac::operator<=(frac _frac) const {
+bool frac::operator<=(const frac &_frac) const {
   return top * _frac.bottom <= _frac.top * bottom;
 }
 
-bool frac::operator>(frac _frac) const {
+bool frac::operator>(const frac &_frac) const {
   return top * _frac.bottom > _frac.top * bottom;
 }
 
-bool frac::operator>=(frac _frac) const {
+bool frac::operator>=(const frac &_frac) const {
   return top * _frac.bottom >= _frac.top * bottom;
 }
 
@@ -144,5 +124,4 @@ void frac::contract(void) {
   auto gcd = std::gcd(top, bottom);
   top /= gcd;
   bottom /= gcd;
-  frac a = 1;
 }
