@@ -24,6 +24,7 @@ class frac {
   void operator*=(frac _frac);
   void operator/=(frac _frac);
   bool operator==(frac _frac) const;
+  bool operator!=(frac _frac) const;
   bool operator<(frac _frac) const;
   bool operator<=(frac _frac) const;
   bool operator>(frac _frac) const;

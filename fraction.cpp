@@ -114,6 +114,10 @@ bool frac::operator==(frac _frac) const {
   return mode == _frac.mode && deno == _frac.deno;
 }
 
+bool frac::operator!=(frac _frac) const {
+  return !(*this == _frac);
+}
+
 bool frac::operator<(frac _frac) const {
   return mode * _frac.deno < _frac.mode * deno;
 }
