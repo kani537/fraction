@@ -52,21 +52,15 @@ std::string frac::calc_str(size_t digit) const {
   return ret;
 }
 
-frac frac::operator+(int num) const {
-  frac ret(*this);
-  ret += num;
-  return ret;
-}
-
 frac frac::operator+(frac _frac) const {
   frac ret(*this);
   ret += _frac;
   return ret;
 }
 
-frac frac::operator-(int num) const {
+frac frac::operator-() const {
   frac ret(*this);
-  ret -= num;
+  ret.mode *= -1;
   return ret;
 }
 
@@ -76,21 +70,9 @@ frac frac::operator-(frac _frac) const {
   return ret;
 }
 
-frac frac::operator*(int num) const {
-  frac ret(*this);
-  ret *= num;
-  return ret;
-}
-
 frac frac::operator*(frac _frac) const {
   frac ret(*this);
   ret *= _frac;
-  return ret;
-}
-
-frac frac::operator/(int num) const {
-  frac ret(*this);
-  ret /= num;
   return ret;
 }
 
@@ -98,11 +80,6 @@ frac frac::operator/(frac _frac) const {
   frac ret(*this);
   ret /= _frac;
   return ret;
-}
-
-void frac::operator+=(int num) {
-  mode += num * deno;
-  contract();
 }
 
 void frac::operator+=(frac _frac) {
@@ -113,10 +90,6 @@ void frac::operator+=(frac _frac) {
   contract();
 }
 
-void frac::operator-=(int num) {
-  mode -= num * deno;
-  contract();
-}
 void frac::operator-=(frac _frac) {
   auto lcm = std::lcm(deno, _frac.deno);
   mode *= lcm / deno;
@@ -125,19 +98,9 @@ void frac::operator-=(frac _frac) {
   contract();
 }
 
-void frac::operator*=(int num) {
-  mode *= num;
-  contract();
-}
-
 void frac::operator*=(frac _frac) {
   mode *= _frac.mode;
   deno *= _frac.deno;
-  contract();
-}
-
-void frac::operator/=(int num) {
-  deno *= num;
   contract();
 }
 

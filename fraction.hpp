@@ -13,22 +13,15 @@ class frac {
   double calc(void) const;
   std::string calc_str(size_t digit = 10) const;
 
-  frac operator+(int num) const;
   frac operator+(frac _frac) const;
-  frac operator-(int num) const;
+  frac operator-() const;
   frac operator-(frac _frac) const;
-  frac operator*(int num) const;
   frac operator*(frac _frac) const;
-  frac operator/(int num) const;
   frac operator/(frac _frac) const;
 
-  void operator+=(int num);
   void operator+=(frac _frac);
-  void operator-=(int num);
   void operator-=(frac _frac);
-  void operator*=(int num);
   void operator*=(frac _frac);
-  void operator/=(int num);
   void operator/=(frac _frac);
   bool operator==(frac _frac) const;
   bool operator<(frac _frac) const;
