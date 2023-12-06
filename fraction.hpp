@@ -31,6 +31,10 @@ class frac {
   void operator/=(int num);
   void operator/=(frac _frac);
   bool operator==(frac _frac) const;
+  bool operator<(frac _frac) const;
+  bool operator<=(frac _frac) const;
+  bool operator>(frac _frac) const;
+  bool operator>=(frac _frac) const;
 
  private:
   int mode;

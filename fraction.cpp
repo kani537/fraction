@@ -151,6 +151,22 @@ bool frac::operator==(frac _frac) const {
   return mode == _frac.mode && deno == _frac.deno;
 }
 
+bool frac::operator<(frac _frac) const {
+  return mode * _frac.deno < _frac.mode * deno;
+}
+
+bool frac::operator<=(frac _frac) const {
+  return mode * _frac.deno <= _frac.mode * deno;
+}
+
+bool frac::operator>(frac _frac) const {
+  return mode * _frac.deno > _frac.mode * deno;
+}
+
+bool frac::operator>=(frac _frac) const {
+  return mode * _frac.deno >= _frac.mode * deno;
+}
+
 void frac::contract(void) {
   auto gcd = std::gcd(mode, deno);
   mode /= gcd;
