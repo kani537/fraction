@@ -1,5 +1,6 @@
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
+#include <iostream>
 #include <numeric>
 #include <string>
 #include <utility>
@@ -13,12 +14,17 @@ class frac {
   explicit frac(mp::cpp_int numerator) : top(numerator), bottom(1) { contract(); }
   explicit frac(mp::cpp_int numerator, mp::cpp_int denominator) : top(numerator), bottom(denominator) { contract(); }
   explicit frac(double _double) {
-    std::string s = std::to_string(_double);
-    auto decimalPos = s.find('.');
-    auto numDigits = s.size() - decimalPos - 1;
+    double integral;
+    double frac = std::modf(_double, &integral);
 
-    top = mp::cpp_int(mp::cpp_dec_float_50(_double) * mp::pow(mp::cpp_dec_float_50(10), numDigits));
-    bottom = mp::pow(mp::cpp_int(10), numDigits);
+    int powerOfTen = 0;
+    while (frac != std::floor(frac)) {
+      frac *= 10;
+      powerOfTen++;
+    }
+
+    top = mp::cpp_int(integral) * mp::pow(mp::cpp_int(10), powerOfTen) + mp::cpp_int(frac);
+    bottom = mp::pow(mp::cpp_int(10), powerOfTen);
     contract();
   }
   explicit frac(std::pair<int, int> _pair) : top(_pair.first), bottom(_pair.second) { contract(); }
@@ -88,7 +94,7 @@ class frac {
   mp::cpp_int bottom;
 
   void contract(void) {
-    auto gcd = mp::gcd(top, bottom);
+    const mp::cpp_int gcd = mp::gcd(top, bottom);
     top /= gcd;
     bottom /= gcd;
 
