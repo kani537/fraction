@@ -44,7 +44,7 @@ class frac {
 
   mp::cpp_int get_top(void) const { return top; }
   mp::cpp_int get_bottom(void) const { return bottom; }
-  double calc(void) const { return (double)top / (double)bottom; }
+  double calc(void) const { return ((mp::cpp_dec_float_50)top / (mp::cpp_dec_float_50)bottom).convert_to<double>(); }
   std::string calc_str(size_t digit = 10) const {
     std::string str;
     auto _top = top;
