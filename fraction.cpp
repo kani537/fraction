@@ -29,12 +29,12 @@ std::string frac::calc_str(size_t digit) const {
     ret += std::to_string(tmp / bottom);
     tmp %= bottom;
     tmp *= 10;
+    if (!tmp)
+      break;
     if (flag) {
       ret += ".";
       flag = false;
     }
-    if (!tmp)
-      break;
   }
 
   return ret;
@@ -45,42 +45,32 @@ frac frac::operator+(const frac &_frac) const {
 }
 
 frac frac::operator-() const {
-  frac ret(*this);
-  ret.top *= -1;
-  return ret;
+  return frac(-top, bottom);
 }
 
 frac frac::operator-(const frac &_frac) const {
-  frac ret(*this);
-  ret -= _frac;
-  return ret;
+  return frac(top * _frac.bottom - _frac.top * bottom, bottom * _frac.bottom);
 }
 
 frac frac::operator*(const frac &_frac) const {
-  frac ret(*this);
-  ret *= _frac;
-  return ret;
+  return frac(top * _frac.top, bottom * _frac.bottom);
 }
 
 frac frac::operator/(const frac &_frac) const {
-  frac ret(*this);
-  ret /= _frac;
-  return ret;
+  return frac(top * _frac.bottom, bottom * _frac.top);
 }
 
 void frac::operator+=(const frac &_frac) {
-  auto lcm = std::lcm(bottom, _frac.bottom);
-  top *= lcm / bottom;
-  top += _frac.top * (lcm / _frac.bottom);
-  bottom = lcm;
+  top *= _frac.bottom;
+  top += _frac.top * bottom;
+  bottom *= _frac.bottom;
   contract();
 }
 
 void frac::operator-=(const frac &_frac) {
-  auto lcm = std::lcm(bottom, _frac.bottom);
-  top *= lcm / bottom;
-  top -= _frac.top * (lcm / _frac.bottom);
-  bottom = lcm;
+  top *= _frac.bottom;
+  top -= _frac.top * bottom;
+  bottom *= _frac.bottom;
   contract();
 }
 
