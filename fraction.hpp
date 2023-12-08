@@ -6,6 +6,7 @@ class frac {
  public:
   explicit frac(int numerator = 0) : top(numerator), bottom(1) { contract(); }
   explicit frac(int numerator, int denominator) : top(numerator), bottom(denominator) { contract(); }
+  explicit frac(double _double);
   explicit frac(std::pair<int, int> _pair) : top(_pair.first), bottom(_pair.second) { contract(); }
   explicit frac(const std::string &str);
 
@@ -32,7 +33,7 @@ class frac {
   inline bool operator>=(const frac &_frac) const;
 
  private:
-  int top;
-  int bottom;
+  int64_t top;
+  int64_t bottom;
   void contract(void);
 };

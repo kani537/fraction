@@ -1,5 +1,16 @@
 #include "fraction.hpp"
 
+frac::frac(double _double) {
+  top = 0;
+  bottom = 1;
+  while (_double != (int)_double && bottom < 1e9) {
+    _double *= 10;
+    bottom *= 10;
+  }
+  top = _double;
+  contract();
+}
+
 frac::frac(const std::string &str) {
   top = 0;
   bottom = 1;
@@ -23,8 +34,15 @@ double frac::calc(void) const { return (double)top / bottom; }
 
 std::string frac::calc_str(size_t digit) const {
   std::string ret = "";
+
   auto tmp = top;
   bool flag = true;
+
+  if(tmp < 0) {
+    ret += "-";
+    tmp = -tmp;
+  }
+
   while (ret.size() < digit + 1) {
     ret += std::to_string(tmp / bottom);
     tmp %= bottom;
@@ -114,4 +132,9 @@ void frac::contract(void) {
   auto gcd = std::gcd(top, bottom);
   top /= gcd;
   bottom /= gcd;
+
+  if (bottom < 0) {
+    top = -top;
+    bottom = -bottom;
+  }
 }
