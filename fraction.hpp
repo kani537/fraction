@@ -1,6 +1,5 @@
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
-#include <iostream>
 #include <numeric>
 #include <string>
 #include <utility>
@@ -71,6 +70,9 @@ class frac {
     }
     return str;
   }
+  frac abs(void) const { return frac(top < 0 ? -top : top, bottom); }
+  frac inv(void) const { return frac(bottom, top); }
+  frac pow(int n) const { return frac(mp::pow(top, n), mp::pow(bottom, n)); }
 
   frac operator+(const frac &_frac) const { return frac(top * _frac.bottom + _frac.top * bottom, bottom * _frac.bottom); }
   frac operator-() const { return frac(-top, bottom); }
