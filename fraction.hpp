@@ -10,7 +10,7 @@ class frac {
  public:
   explicit frac(int numerator = 0) : top(numerator), bottom(1) { contract(); }
   explicit frac(int numerator, int denominator) : top(numerator), bottom(denominator) { contract(); }
-  explicit frac(mp::cpp_int numerator = 0) : top(numerator), bottom(1) { contract(); }
+  explicit frac(mp::cpp_int numerator) : top(numerator), bottom(1) { contract(); }
   explicit frac(mp::cpp_int numerator, mp::cpp_int denominator) : top(numerator), bottom(denominator) { contract(); }
   explicit frac(double _double) {
     std::string s = std::to_string(_double);
