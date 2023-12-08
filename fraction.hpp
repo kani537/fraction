@@ -1,19 +1,22 @@
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
 #include <numeric>
 #include <string>
 #include <utility>
 
+namespace mp = boost::multiprecision;
+
 class frac {
  public:
-  explicit frac(int numerator = 0) : top(numerator), bottom(1) { contract(); }
-  explicit frac(int numerator, int denominator) : top(numerator), bottom(denominator) { contract(); }
+  explicit frac(mp::cpp_int numerator = 0) : top(numerator), bottom(1) { contract(); }
+  explicit frac(mp::cpp_int numerator, mp::cpp_int denominator) : top(numerator), bottom(denominator) { contract(); }
   explicit frac(double _double) {
-    top = 0;
-    bottom = 1;
-    while (_double != (int)_double && bottom < 1e9) {
-      _double *= 10;
-      bottom *= 10;
-    }
-    top = _double;
+    std::string s = std::to_string(_double);
+    auto decimalPos = s.find('.');
+    auto numDigits = s.size() - decimalPos - 1;
+
+    top = mp::cpp_int(mp::cpp_dec_float_50(_double) * mp::pow(mp::cpp_dec_float_50(10), numDigits));
+    bottom = mp::pow(mp::cpp_int(10), numDigits);
     contract();
   }
   explicit frac(std::pair<int, int> _pair) : top(_pair.first), bottom(_pair.second) { contract(); }
@@ -32,29 +35,30 @@ class frac {
     contract();
   }
 
-  int get_top(void) const { return top; }
-  int get_bottom(void) const { return bottom; }
-  double calc(void) const { return (double)top / bottom; }
+  mp::cpp_int get_top(void) const { return top; }
+  mp::cpp_int get_bottom(void) const { return bottom; }
+  double calc(void) const { return (double)top / (double)bottom; }
   std::string calc_str(size_t digit = 10) const {
     std::string str;
     auto _top = top;
     auto _bottom = bottom;
 
-    if(_top < 0) {
+    if (_top < 0) {
       str += '-';
       _top = -_top;
     }
 
-    while (_bottom <= _top) {
-      str += std::to_string(_top / _bottom);
+    if (_bottom <= _top) {
+      str += (_top / _bottom).convert_to<std::string>();
       _top %= _bottom;
-    }
+    } else
+      str += '0';
     if (_top == 0)
-      return str.empty() ? "0" : str;
+      return str;
     str += '.';
     while (_top != 0 && str.size() < digit + 2) {
       _top *= 10;
-      str += std::to_string(_top / _bottom);
+      str += (_top / _bottom).convert_to<std::string>();
       _top %= _bottom;
     }
     return str;
@@ -78,10 +82,11 @@ class frac {
   bool operator>=(const frac &_frac) const { return top * _frac.bottom >= _frac.top * bottom; }
 
  private:
-  int64_t top;
-  int64_t bottom;
+  mp::cpp_int top;
+  mp::cpp_int bottom;
+
   void contract(void) {
-    auto gcd = std::gcd(top, bottom);
+    auto gcd = mp::gcd(top, bottom);
     top /= gcd;
     bottom /= gcd;
 
