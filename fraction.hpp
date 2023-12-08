@@ -39,23 +39,28 @@ class frac {
     std::string str;
     auto _top = top;
     auto _bottom = bottom;
-    while (_top >= _bottom) {
+
+    if(_top < 0) {
+      str += '-';
+      _top = -_top;
+    }
+
+    while (_bottom <= _top) {
       str += std::to_string(_top / _bottom);
       _top %= _bottom;
     }
     if (_top == 0)
-      return str;
+      return str.empty() ? "0" : str;
     str += '.';
-    while (_top != 0 && str.size() < digit) {
-      str += std::to_string(_top / _bottom);
+    while (_top != 0 && str.size() < digit + 2) {
       _top *= 10;
+      str += std::to_string(_top / _bottom);
       _top %= _bottom;
     }
     return str;
   }
 
-  frac
-  operator+(const frac &_frac) const { return frac(top * _frac.bottom + _frac.top * bottom, bottom * _frac.bottom); }
+  frac operator+(const frac &_frac) const { return frac(top * _frac.bottom + _frac.top * bottom, bottom * _frac.bottom); }
   frac operator-() const { return frac(-top, bottom); }
   frac operator-(const frac &_frac) const { return *this + (-_frac); }
   frac operator*(const frac &_frac) const { return frac(top * _frac.top, bottom * _frac.bottom); }
